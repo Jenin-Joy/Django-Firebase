@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post" id="Addproduct" data-product-url="{% url 'webshop:ajaxsubcategory' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Category</td>
+                <td>
+                    <select name="sel_category" id="sel_category">
+                        <option value="">...Select...</option>
+                        {% for i in cat %}
+                        <option value="{{i.id}}">{{i.category.category_name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>SubCategory</td>
+                <td>
+                    <select name="sel_subcategory" id="sel_subcategory">
+                        <option value="">...Select...</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Product Name</td>
+                <td><input type="text" name="txt_pdtname" id=""></td>
+            </tr>
+            <tr>
+                <td>Product Quantity</td>
+                <td><input type="number" name="txt_qty" id=""></td>
+            </tr>
+            <tr>
+                <td>Producty Rate</td>
+                <td><input type="number" name="txt_rate" id=""></td>
+            </tr>
+            <tr>
+                <td>Product Image</td>
+                <td><input type="file" name="txt_photo" id=""></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="submit" value="Add"></td>
+            </tr>
+        </table>
+    </form>
+    <table cellpadding="10">
+        <tr>
+            <th>#</th>
+            <th>Category</th>
+            <th>SubCategory</th>
+            <th>Product Name</th>
+            <th>Rate</th>
+            <th>Quantity</th>
+            <th>Photo</th>
+            <th>Action</th>
+        </tr>
+        {% for i in product %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.cat.category_name}}</td>
+            <td>{{i.subcat.subcategory_name}}</td>
+            <td>{{i.product.product_name}}</td>
+            <td>{{i.product.product_rate}}</td>
+            <td>
+                {% if i.product.product_qty == 0 %}
+                <span style="color: red;">Out Of Stock</span>
+                {% else %}
+                {{i.product.product_qty}}
+                {% endif %}
+            </td>
+            <td><img src="{{i.product.product_photo}}" width="100" height="100" alt=""></td>
+            <td><a href="{% url 'webshop:deleteproduct' i.id %}">Delete</a>
+                <a href="{% url 'webshop:updatestock' i.id %}">Update Stock</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% if msg %}
+    <script>
+        alert("{{msg}}")
+        window.location = "{% url 'webshop:addproduct' %}"
+    </script>
+    {% endif %}
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#sel_category").change(function () {
+        var did = $(this).val();
+        var ur = $("#Addproduct").attr("data-product-url");
+        $.ajax({
+            url: ur,
+            data: { catid: did, },
+            success: function (data) {
+                $("#sel_subcategory").html(data);
+            },
+        });
+    });
+</script>

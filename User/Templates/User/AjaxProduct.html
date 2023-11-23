@@ -1,0 +1,24 @@
+<div class="main-card" id="result">
+    {% for i in pdt %}
+    <div class="card">
+        <div><img src="{{i.pdt.product_photo}}" width="150" height="150" alt=""></div>
+        <div>
+            <table cellpadding="5">
+                <tr>
+                    <td>Name</td>
+                    <td>{{i.pdt.product_name}}</td>
+                </tr>
+                <tr>
+                    <td>Quantity</td>
+                    <td>{{i.pdt.product_qty}}</td>
+                </tr>
+                <tr>
+                    <td>Rate</td>
+                    <td>{{i.pdt.product_rate}}</td>
+                </tr>
+            </table>
+        </div>
+        <div><a href="{% url 'webuser:addtocart' i.id %}">Add To Cart</a></div>
+    </div>
+    {% endfor %}
+</div>

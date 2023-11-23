@@ -1,0 +1,212 @@
+{% load mathfilters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<style>
+    .item-card {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        width: 580px;
+        gap: 2rem;
+        padding: 15px;
+        /* background-color: white; */
+        box-shadow: 10px 10px 10px;
+        border-radius: 10px;
+    }
+    .item-card:hover {
+        box-shadow: 20px 20px 20px;
+        transform: scale(1.05);
+        transition: 0.9s;
+    }
+    .item-list {
+        display: flex;
+        flex-direction: column;
+        /* align-items: center; */
+        justify-content: center;
+        gap: 2rem;
+        width: fit-content;
+        padding: 10px;
+    }
+    .cont-gap {
+        padding-bottom: 20px;
+    }
+    .cont-gap1 {
+        margin-top: 10px;
+        padding-bottom: 15px;
+    }
+    .content {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4rem;
+        /* background-color: #00000014; */
+        width: fit-content;
+        /* padding: 15px; */
+        height: fit-content;
+        margin-top: 10px;
+        border-radius: 10px;
+    }
+    .side-content {
+        padding: 10px;
+        height: fit-content;
+        /* background-color: #c5c5db; */
+        margin-top: 10px;
+        box-shadow: 10px 10px 10px;
+        border-radius: 10px;
+        margin-right: 10px;
+    }
+    .side-content:hover {
+        box-shadow: 20px 20px 20px;
+        transform: scale(1.05);
+        transition: 0.9s;
+    }
+    .out-cont {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        /* align-items: center; */
+        /* background-color: #9a9ab8; */
+        /* min-height: 768px; */
+    }
+    .out {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+    .home {
+        border: 1px solid red;
+        padding: 10px;
+        color: red;
+        border-radius: 50%;
+    }
+    .home:hover {
+        color: white;
+        transition: 0.5s;
+        border: 1px red solid;
+        background-color: red;
+    }
+    .text {
+        padding: 10px;
+        border: 1px black solid;
+        border-radius: 10px;
+    }
+    .delete {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        color: red;
+    }
+    .check-out {
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: 1px;
+        background-color: #54c454;
+        color: white;
+        font-size: 15px;
+    }
+</style>
+<body>
+    {% if cart %}
+        <div class="out-cont">
+            <div class="content">
+                <div class="item-list">
+                    {% for i in cart %}
+                    <div class="item-card">
+                        <div>
+                            <div><img src="{{i.product.product_photo}}" width="150" height="150" style="border-radius: 50%;" alt=""></div>
+                            
+                        </div>
+                        <div>
+                            <div class="cont-gap1">Item #{{forloop.counter}}</div>
+                            <div class="cont-gap1">Name :{{i.product.product_name}}</div>
+                            <div class="cont-gap1">Rate : <span id="rate" class="rate">{{i.product.product_rate}}</span> </div>
+                        </div>
+                        <div>
+                            <div class="cont-gap">Quantity : <input type="number" name="txt_qty" id="txt_qty" class="text txt_qty" value="{{i.cart.cart_qty}}" min="1" alt="{{i.id}}" onchange="getCalculate()"></div>
+                            <div class="cont-gap con">Total : <span id="total" class="total">{{i.product.product_rate|mul:i.cart.cart_qty}}</span> </div>
+                            <div class="cont-gap" style="display: flex;flex-direction: row;justify-content: flex-end;"><div style="width: fit-content;"><a href="{% url 'webuser:deletecartitem' i.id %}"><i class="fas fa-trash-alt delete"></i></a></div></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="side-content">
+                    <div style="margin-top: 10px;"><a href="{% url 'webuser:homepage' %}"><i class="fas fa-home home"></i></a></div>
+                    <div style="margin-top: 10px;">No Of Product : {{count}}</div>
+                    <div style="margin-top: 10px;">Total : <span id="result">{{total}}</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="out">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Check Out" class="check-out">
+            </form>
+        </div>
+    {% else %}
+    <h2 align="center" style="color:red">No Items <a href="{% url 'webuser:homepage' %}"><i class="fas fa-home home"></i></a></h2>
+    {% endif %}
+    {% if msg %}
+    <script>
+        alert("{{msg}}")
+        window.location = "{% url 'webuser:mycart' %}"
+    </script>
+    {% endif %}
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(".txt_qty").change(function () {
+        var qty = $(this).val();
+        var cartid = $(this).attr('alt');
+        // console.log(qty,cartid);
+        var ur = "{% url 'webuser:ajaxmycart' %}";
+        $.ajax({
+            url: ur,
+            data: { cartid: cartid,qty:qty },
+            success: function (data) {
+                // $("#result").html(data);
+                // window.location = "{% url 'webuser:mycart' %}"
+            },
+        });
+    });
+
+    function getCalculate()
+    {
+        const qtyElements = document.querySelectorAll('.txt_qty');
+        const rateElements = document.querySelectorAll('.rate');
+        var grandtot = 0;
+
+        if (qtyElements.length === rateElements.length) {
+            for (let i = 0; i < qtyElements.length; i++) {
+                const qtyValue = parseInt(qtyElements[i].value);
+                const rateValue = parseFloat(rateElements[i].innerHTML);
+                
+                const total = qtyValue * rateValue;
+                grandtot = grandtot + total;
+                // Update the corresponding total span with the calculated total
+                const totalSpans = document.getElementsByClassName('total');
+                if (totalSpans.length > i) {
+                    totalSpans[i].innerHTML = total;
+                }
+
+                // console.log(`Item ${i + 1} - Quantity: ${qtyValue}, Rate: ${rateValue}, Total: ${total}`);
+                // Perform actions with qtyValue, rateValue, total, etc.
+            }
+            document.getElementById("result").innerHTML = grandtot
+        } else {
+            console.error("Arrays have different lengths!");
+            }
+    }
+</script>

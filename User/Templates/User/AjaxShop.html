@@ -1,0 +1,10 @@
+<div class="main-card">
+    {% for i in shop %}
+    <div class="card">
+        <div><img src="{{i.shop.shop_photo}}" width="150" height="150" alt=""></div>
+        <div>{{i.shop.shop_name}}</div>
+        <div>{{i.shop.shop_contact}}</div>
+        <div><a href="{% url 'webuser:viewproduct' i.id %}">View More</a></div>
+    </div>
+    {% endfor %}
+</div>

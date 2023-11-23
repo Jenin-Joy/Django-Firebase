@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Name</td>
+                <td><input type="text" name="txt_name" id=""></td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td><input type="text" name="txt_contact" id=""></td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="email" name="txt_email" id=""></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><textarea name="txt_address" id="" cols="20" rows="5"></textarea></td>
+            </tr>
+            <tr>
+                <td>District</td>
+                <td>
+                    <select name="sel_district" id="">
+                        <option value="">...Select...</option>
+                        {% for i in district %}
+                        <option value="{{i.id}}">{{i.district.district_name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Photo</td>
+                <td><input type="file" name="txt_photo" id=""></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="txt_password" id=""></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="submit" value="Add"></td>
+            </tr>
+        </table>
+    </form>
+    <table cellpadding="10">
+        <tr>
+            <td>#</td>
+            <td>Name</td>
+            <td>Contact</td>
+            <td>Email</td>
+            <td>Address</td>
+            <td>District</td>
+            <td>Photo</td>
+            <td>Action</td>
+        </tr>
+        {% for i in sub %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.subadmin.subadmin_name}}</td>
+            <td>{{i.subadmin.subadmin_contact}}</td>
+            <td>{{i.subadmin.subadmin_email}}</td>
+            <td width="100">{{i.subadmin.subadmin_address}}</td>
+            <td>{{i.district.district_name}}</td>
+            <td><img src="{{i.subadmin.subadmin_photo}}" width="150" height="150" alt=""></td>
+            <td><a href="{% url 'webadmin:deletesubadmin' i.id %}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

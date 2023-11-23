@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    welcome {{data.subadmin_name}}<br>
+    <a href="{% url 'websubadmin:profile' %}">Profile</a><br>
+    <a href="{% url 'websubadmin:newshop' %}">New Shop</a><br>
+    <a href="{% url 'websubadmin:acceptedshop' %}">Accepted Shop</a><br>
+    <a href="{% url 'websubadmin:rejectedshop' %}">Rejected Shop</a><br>
+    <a href="{% url 'websubadmin:newuser' %}">New User</a>
+</body>
+</html>

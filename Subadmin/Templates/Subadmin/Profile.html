@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post">
+        <table cellpadding="10">
+            <tr>
+                <td colspan="2" align="center"><img src="{{subadmin.subadmin_photo}}" width="150" height="150" alt=""></td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>{{subadmin.subadmin_name}}</td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td>{{subadmin.subadmin_contact}}</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td width="100">{{subadmin.subadmin_address}}</td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><a href="{% url 'websubadmin:changepassword' %}">Change Password</a>
+                    <a href="{% url 'websubadmin:editprofile' %}">Edit Profile</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+    {% if msg %}
+    <script>
+        alert("Password Reset Link is sented to the {{msg}}")
+        window.loaction = "{% url 'websubadmin:home' %}"
+    </script>
+    {% endif %} 
+</body>
+</html>

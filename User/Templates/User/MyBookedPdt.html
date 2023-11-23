@@ -1,0 +1,76 @@
+{% load mathfilters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .main-card {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap:2rem;
+    }
+    .card {
+        padding: 21px;
+        background-color: #ececec;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .bill {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        padding-right: 50px;
+    }
+    .bill-style {
+        padding: 10px 20px;
+        text-decoration: none;
+        border: 1px;
+        border-radius: 10px;
+        background-color: rgb(78, 243, 78);
+        color: white;
+    }
+    .bill-style:hover {
+        color: rgb(78, 243, 78);
+        background-color: white;
+        border: 1px rgb(78, 243, 78) solid;
+    }
+</style>
+<body>
+    <div class="main-card" id="result">
+        {% for i in cart %}
+        <div class="card">
+            <div><img src="{{i.product.product_photo}}" width="150" height="150" alt=""></div>
+            <div>
+                <table cellpadding="5">
+                    <tr>
+                        <td>Name</td>
+                        <td>{{i.product.product_name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Quantity</td>
+                        <td>{{i.cart.cart_qty}}</td>
+                    </tr>
+                    <tr>
+                        <td>Rate</td>
+                        <td>{{i.product.product_rate|mul:i.cart.cart_qty}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="bill">
+        <a href="{% url 'webuser:bills' id %}" class="bill-style">Bill</a>
+    </div>
+</body>
+</html>

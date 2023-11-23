@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table cellpadding="10">
+        <tr>
+            <td>#</td>
+            <td>Status</td>
+            <td>Date</td>
+            <td>Action</td>
+        </tr>
+        {% for i in book %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>
+                {% if i.book.booking_status == "1" %}
+                <span style="color: green;">Payed</span>
+                {% endif %}
+            </td>
+            <td>{{i.book.booking_date}}</td>
+            <td><a href="{% url 'webuser:bookedproducts' i.id %}">View Products</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

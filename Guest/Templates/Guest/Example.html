@@ -1,0 +1,26 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+            <input type="submit" id="example" value="Add">
+        <div id="result"></div>
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#example").click(function () {
+        var did = $(this).val();
+        var ur = "{% url 'webguest:ajaxexample' %}";
+        $.ajax({
+            url: ur,
+            data: { disd: did, },
+            success: function (data) {
+                $("#result").html(data);
+            },
+        });
+    });
+</script> -->

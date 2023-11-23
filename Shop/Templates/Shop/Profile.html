@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post">
+        <table>
+            <tr>
+                <td>Name</td>
+                <td>{{shop.shop_name}}</td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td>{{shop.shop_contact}}</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td width="150">{{shop.shop_address}}</td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'webshop:editprofile' %}">Edit Profile</a></td>
+                <td><a href="{% url 'webshop:changepassword' %}">Change Password</a></td>
+            </tr>
+        </table>
+    </form>
+    {% if msg %}
+    <script>
+        alert("Password Reset Link is Sented to {{msg}} email")
+        window.location = "{% url 'webshop:home' %}"
+    </script>
+    {% endif %}
+</body>
+</html>

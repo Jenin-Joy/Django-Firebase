@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post">
+        <table>
+            <tr>
+                <td colspan="2"><img src="{{user.user_photo}}" alt="" width="150" height="150"></td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>{{user.user_name}}</td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td>{{user.user_contact}}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{user.user_email}}</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>{{user.user_address}}</td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'webuser:editprofile' %}">Edit Profile</a></td>
+                <td><a href="{% url 'webuser:changepassword' %}">Change Password</a></td>
+            </tr>
+        </table>
+    </form>
+    {% if msg %}
+    <script>
+        alert("Password Reset Link is sented to the {{msg}}")
+        window.loaction = "{% url 'webuser:home' %}"
+    </script>
+    {% endif %} 
+</body>
+</html>

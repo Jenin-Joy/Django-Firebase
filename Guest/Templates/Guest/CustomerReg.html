@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data" id="Customerreg" data-place-url="{% url 'webguest:ajaxplace' %}">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Name</td>
+                <td><input type="text" name="txt_name" id=""></td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td><input type="text" name="txt_contact" id=""></td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="text" name="txt_email" id=""></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><textarea name="txt_address" id="" cols="20" rows="5"></textarea></td>
+            </tr>
+            <tr>
+                <td>District</td>
+                <td><select name="sel_district" id="sel_district">
+                    <option value="">...Select...</option>
+                    {% for i in district %}
+                    <option value="{{i.id}}">{{i.data.district_name}}</option>
+                    {% endfor %}
+                </select></td>
+            </tr>
+            <tr>
+                <td>Place</td>
+                <td><select name="sel_place" id="sel_place">
+                    <option value="">...Select...</option>
+                </select></td>
+            </tr>
+            <tr>
+                <td>Photo</td>
+                <td><input type="file" name="txt_photo" id=""></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="txt_password" id=""></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Send"></td>
+            </tr>
+        </table>
+    </form>
+    {% if msg %}
+    <script>
+        alert('{{msg}}')
+        // window.location="{% url 'webguest:userreg' %}"
+    </script>
+    {% endif %}
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#sel_district").change(function () {
+        var did = $(this).val();
+        var ur = $("#Customerreg").attr("data-place-url");
+        $.ajax({
+            url: ur,
+            data: { disd: did, },
+            success: function (data) {
+                $("#sel_place").html(data);
+            },
+        });
+    });
+</script>
