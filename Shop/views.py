@@ -112,4 +112,4 @@ def viewbooking(request):
         print(b.to_dict())
     return render(request,"Shop/ViewBooking.html",{'book':book_data})
 
-    # Hai
+    
