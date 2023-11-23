@@ -100,16 +100,25 @@ def updatestock(request,pid):
 
 def viewbooking(request):
     book_data = []
-    bkid = []
+    bkid = set()
     pdt = db.collection("tbl_product").where("shop_id", "==", request.session["shid"]).stream()
     for p in pdt:
         cart = db.collection("tbl_cart").where("product_id", "==", p.id).stream()
         for c in cart:
             ct = c.to_dict()
-            bkid.append(ct["booking_id"])
-    book = db.collection("tbl_booking").where("id", "==", bkid).stream()
-    for b in book:
-        print(b.to_dict())
+            bkid.add(ct["booking_id"])
+    for bk in bkid:
+        book = db.collection("tbl_booking").document(bk).get().to_dict()
+        print(book)
+    # udata = set()
+    # cart = db.collection("tbl_cart").stream()
+    # for i in cart:
+    #     data = i.to_dict()
+    #     if "booking_id" in data:
+    #         udata.add(data["booking_id"])
+    
+    # for bk in udata:
+    #     print(bk)
     return render(request,"Shop/ViewBooking.html",{'book':book_data})
 
     
