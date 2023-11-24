@@ -197,7 +197,15 @@ def mybooking(request):
     book_data = []
     book = db.collection("tbl_booking").where("user_id", "==", request.session["uid"]).where("booking_status", "==", "1").stream()
     for b in book:
-        data = {"book":b.to_dict(),"id":b.id}
+        cart_data  = db.collection("tbl_cart").where("booking_id", "==", b.id).stream()
+        tot = 0
+        for c in cart_data:
+            crt = c.to_dict()
+            # print(crt)
+            pro = db.collection("tbl_product").document(crt["product_id"]).get().to_dict()
+            tot = tot + int(crt["cart_qty"]) * int(pro["product_rate"])
+        # print(tot)
+        data = {"book":b.to_dict(),"id":b.id,"total":tot}
         book_data.append(data)
     return render(request,"User/MyBooking.html",{'book':book_data})
 

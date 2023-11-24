@@ -6,14 +6,15 @@
     <title>Document</title>
 </head>
 <body>
-    <table>
+    <table cellpadding="10">
         <tr>
             <td>#</td>
             <td>User</td>
             <td>Status</td>
+            <td>Total</td>
             <td>Action</td>
         </tr>
-        {% for i in book %}
+        {% for i,j in book %}
         <tr>
             <td>{{forloop.counter}}</td>
             <td>{{i.user.user_name}}</td>
@@ -22,7 +23,8 @@
                 <span style="color:green">Payed</span>
                 {% endif %}
             </td>
-            <td></td>
+            <td>{{j.total}}</td>
+            <td><a href="{% url 'webshop:vieworderpdt' i.id %}">View Product</a></td>
         </tr>
         {% endfor %}
     </table>

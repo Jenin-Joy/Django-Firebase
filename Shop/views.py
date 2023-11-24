@@ -100,6 +100,7 @@ def updatestock(request,pid):
 
 def viewbooking(request):
     book_data = []
+    tot_data = []
     bkid = set()
     pdt = db.collection("tbl_product").where("shop_id", "==", request.session["shid"]).stream()
     for p in pdt:
@@ -109,16 +110,27 @@ def viewbooking(request):
             bkid.add(ct["booking_id"])
     for bk in bkid:
         book = db.collection("tbl_booking").document(bk).get().to_dict()
-        print(book)
-    # udata = set()
-    # cart = db.collection("tbl_cart").stream()
-    # for i in cart:
-    #     data = i.to_dict()
-    #     if "booking_id" in data:
-    #         udata.add(data["booking_id"])
-    
-    # for bk in udata:
-    #     print(bk)
-    return render(request,"Shop/ViewBooking.html",{'book':book_data})
+        if book["booking_status"] == "1":
+            user = db.collection("tbl_user").document(book["user_id"]).get().to_dict()
+            book_data.append({"book":book,"user":user,"id":bk})
+    for data in book_data:
+        cart_data  = db.collection("tbl_cart").where("booking_id", "==", data['id']).stream()
+        tot = 0
+        for c in cart_data:
+            crt = c.to_dict()
+            # print(crt)
+            pro = db.collection("tbl_product").document(crt["product_id"]).get().to_dict()
+            tot = tot + int(crt["cart_qty"]) * int(pro["product_rate"])
+        # print(tot)
+        tot_data.append({"total":tot})
+    final_data = zip(book_data,tot_data)
+    return render(request,"Shop/ViewBooking.html",{'book':final_data})
 
-    
+def vieworderpdt(request,id):
+    cart = db.collection("tbl_cart").where("booking_id", "==", id).stream()
+    cart_pdt = []
+    for c in cart:
+        ct = c.to_dict()
+        pdt = db.collection("tbl_product").document(ct["product_id"]).get().to_dict()
+        cart_pdt.append({"cart":ct,"id":c.id,"product":pdt})
+    return render(request,"Shop/ViewOrderProduct.html",{"data":cart_pdt})

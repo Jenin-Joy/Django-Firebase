@@ -1,0 +1,53 @@
+{% load mathfilters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .main-card {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap:2rem;
+    }
+    .card {
+        padding: 21px;
+        background-color: #ececec;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+<body>
+    <div class="main-card" id="result">
+        {% for i in data %}
+        <div class="card">
+            <div><img src="{{i.product.product_photo}}" width="150" height="150" alt=""></div>
+            <div>
+                <table cellpadding="5">
+                    <tr>
+                        <td>Name</td>
+                        <td>{{i.product.product_name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Quantity</td>
+                        <td>{{i.cart.cart_qty}}</td>
+                    </tr>
+                    <tr>
+                        <td>Rate</td>
+                        <td>{{i.product.product_rate|mul:i.cart.cart_qty}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

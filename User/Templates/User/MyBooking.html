@@ -11,6 +11,7 @@
             <td>#</td>
             <td>Status</td>
             <td>Date</td>
+            <td>Total</td>
             <td>Action</td>
         </tr>
         {% for i in book %}
@@ -22,6 +23,7 @@
                 {% endif %}
             </td>
             <td>{{i.book.booking_date}}</td>
+            <td>{{i.total}}</td>
             <td><a href="{% url 'webuser:bookedproducts' i.id %}">View Products</a></td>
         </tr>
         {% endfor %}
