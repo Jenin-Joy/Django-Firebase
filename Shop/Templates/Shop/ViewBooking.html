@@ -21,12 +21,38 @@
             <td>
                 {% if i.book.booking_status == "1" %}
                 <span style="color:green">Payed</span>
+                {% elif i.book.booking_status == "2" %}
+                <span style="color:red">Order Cancelled</span>
+                {% elif i.book.booking_status == "3" %}
+                <span style="color:green">Delivered</span>
+                {% else %}
                 {% endif %}
             </td>
-            <td>{{j.total}}</td>
-            <td><a href="{% url 'webshop:vieworderpdt' i.id %}">View Product</a></td>
+            <td>
+                {% if j.total == 0 %}
+                --
+                {% else %}
+                {{j.total}}
+                {% endif %}
+            </td>
+            <td>
+                {% if i.book.booking_status == "2" %}
+                <span style="color: red;">No Items</span>
+                {% elif i.book.booking_status == "3" %}
+                <a href="{% url 'webshop:vieworderpdt' i.id %}">View Product</a>
+                {% else %}
+                <a href="{% url 'webshop:vieworderpdt' i.id %}">View Product</a>
+                <a href="{% url 'webshop:itemdelivered' i.id %}">Delivered</a>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>
+    {% if msg %}
+    <script>
+        alert("{{msg}}")
+        window.location = "{% url 'webshop:home' %}"
+    </script>
+    {% endif %}
 </body>
 </html>

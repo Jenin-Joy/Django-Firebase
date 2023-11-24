@@ -64,6 +64,12 @@
                         <td>Rate</td>
                         <td>{{i.product.product_rate|mul:i.cart.cart_qty}}</td>
                     </tr>
+                    <tr>
+                        {% if i.book.booking_status == "3" %}
+                        {% else %}
+                        <td colspan="2" align="center"><a href="{% url 'webuser:ordercancel' i.cid %}">Cancel Order</a></td>
+                        {% endif %}
+                    </tr>
                 </table>
             </div>
         </div>

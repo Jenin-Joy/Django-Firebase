@@ -20,11 +20,28 @@
             <td>
                 {% if i.book.booking_status == "1" %}
                 <span style="color: green;">Payed</span>
+                {% elif i.book.booking_status == "2" %}
+                <span style="color: red;">Order Cancelled</span>
+                {% elif i.book.booking_status == "3" %}
+                <span style="color: green;">Delivered</span>
+                {% else %}
                 {% endif %}
             </td>
             <td>{{i.book.booking_date}}</td>
-            <td>{{i.total}}</td>
-            <td><a href="{% url 'webuser:bookedproducts' i.id %}">View Products</a></td>
+            <td>
+                {% if i.total == 0 %}
+                --
+                {% else %}
+                {{i.total}}
+                {% endif %}
+            </td>
+            <td>
+                {% if i.book.booking_status == "2" %}
+                <span style="color: red;">No Items</span>
+                {% else %}
+                <a href="{% url 'webuser:bookedproducts' i.id %}">View Products</a>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>

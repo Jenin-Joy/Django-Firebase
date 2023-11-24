@@ -14,4 +14,10 @@
     <br><a href="{% url 'webuser:mycart' %}">My Cart</a>
     <br><a href="{% url 'webuser:mybooking' %}">My Booking</a>
 </body>
+{% if msg %}
+    <script>
+        alert("{{msg}}")
+        window.location = "{% url 'webuser:homepage' %}"
+    </script>
+    {% endif %}
 </html>

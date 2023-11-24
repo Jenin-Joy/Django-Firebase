@@ -59,7 +59,13 @@
                     </tr>
                     <tr>
                         <td>Quantity</td>
-                        <td>{{i.pdt.product_qty}}</td>
+                        <td>
+                            {% if i.pdt.product_qty == 0 %}
+                            --
+                            {% else %}
+                            {{i.pdt.product_qty}}
+                            {% endif %}
+                        </td>
                     </tr>
                     <tr>
                         <td>Rate</td>
@@ -67,7 +73,13 @@
                     </tr>
                 </table>
             </div>
-            <div><a href="{% url 'webuser:addtocart' i.id %}">Add To Cart</a></div>
+            <div>
+                {% if i.pdt.product_qty == 0 %}
+                <span style="color: red;">Out Of Delivery</span>
+                {% else %}
+                <a href="{% url 'webuser:addtocart' i.id %}">Add To Cart</a>
+                {% endif %}
+            </div>
         </div>
         {% endfor %}
     </div>

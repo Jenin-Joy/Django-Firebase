@@ -13,4 +13,5 @@ urlpatterns = [
     path('updatestock/<str:pid>',views.updatestock,name="updatestock"),
     path('viewbooking/',views.viewbooking,name="viewbooking"),
     path('vieworderpdt/<str:id>',views.vieworderpdt,name="vieworderpdt"),
+    path('itemdelivered/<str:id>',views.itemdelivered,name="itemdelivered"),
 ]

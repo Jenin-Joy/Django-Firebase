@@ -165,6 +165,10 @@ def payment(request):
     for b in booking:
         bkid = b.id
     cart = db.collection("tbl_cart").where("booking_id", "==", bkid).stream()
+    for c in cart:
+        cdata = c.to_dict()
+        if cdata["cart_qty"] == 0:
+            db.collection("tbl_cart").document(c.id).delete() 
     cart_data = []
     tot = 0
     length = 0
@@ -181,6 +185,9 @@ def payment(request):
             qty = ct["cart_qty"]
             stock = pdt["product_qty"]
             balance = int(stock) - int(qty)
+            other_data = db.collection("tbl_cart").where("booking_id", "!=", bkid).where("product_id", "==", ct["product_id"]).where("cart_status", "==", "0").stream()
+            for od in other_data:
+                db.collection("tbl_cart").document(od.id).update({"cart_qty":"0"})
             db.collection("tbl_product").document(ct["product_id"]).update({"product_qty":balance})
         db.collection("tbl_booking").document(bkid).update({"booking_status":"1"})
         return redirect("webuser:loader")
@@ -195,9 +202,9 @@ def loader(request):
 
 def mybooking(request):
     book_data = []
-    book = db.collection("tbl_booking").where("user_id", "==", request.session["uid"]).where("booking_status", "==", "1").stream()
+    book = db.collection("tbl_booking").where("user_id", "==", request.session["uid"]).where("booking_status", ">=", "1").stream()
     for b in book:
-        cart_data  = db.collection("tbl_cart").where("booking_id", "==", b.id).stream()
+        cart_data  = db.collection("tbl_cart").where("booking_id", "==", b.id).where("cart_status", "==", "0").stream()
         tot = 0
         for c in cart_data:
             crt = c.to_dict()
@@ -207,22 +214,24 @@ def mybooking(request):
         # print(tot)
         data = {"book":b.to_dict(),"id":b.id,"total":tot}
         book_data.append(data)
+    # print(book_data)
     return render(request,"User/MyBooking.html",{'book':book_data})
 
 def bookedproducts(request,id):
-    cart = db.collection("tbl_cart").where("booking_id", "==", id).stream()
+    cart = db.collection("tbl_cart").where("booking_id", "==", id).where("cart_status", "==", "0").stream()
+    book = db.collection("tbl_booking").document(id).get().to_dict()
     cart_data = []
     for c in cart:
         ct = c.to_dict()
         pdt = db.collection("tbl_product").document(ct["product_id"]).get().to_dict()
-        cart_data.append({"cart":ct,"product":pdt})
+        cart_data.append({"cart":ct,"product":pdt,"cid":c.id,"book":book})
     return render(request,"User/MyBookedPdt.html",{"cart":cart_data,"id":id})
 
 def bills(request,id):
     cart_data = []
     user = db.collection("tbl_user").document(request.session["uid"]).get().to_dict()
     book = db.collection("tbl_booking").document(id).get().to_dict()
-    cart = db.collection("tbl_cart").where("booking_id", "==", id).stream()
+    cart = db.collection("tbl_cart").where("booking_id", "==", id).where("cart_status", "==", "0").stream()
     rand=random.randint(111111,999999)
     tot = 0
     for c in cart:
@@ -232,3 +241,29 @@ def bills(request,id):
         cart_data.append({"cart":ca,"id":c.id,"product":pdt,"shop":shop})
         tot = tot + int(ca["cart_qty"]) * int(pdt["product_rate"])
     return render(request,"User/Bills.html",{"user":user,"tot":tot,"booking":book,"ran":rand,"bill":cart_data})
+
+def ordercancel(request,id):
+    count = []
+    cart = db.collection("tbl_cart").document(id).get().to_dict()
+    bookid = cart["booking_id"]
+    cart_count = db.collection("tbl_cart").where("booking_id", "==", bookid).stream()
+    for c in cart_count:
+        count.append(c.id)
+    count_len = len(count)
+    if count_len > 1:
+        qty = cart["cart_qty"]
+        pdt = db.collection("tbl_product").document(cart["product_id"]).get().to_dict()
+        pdt_qty = pdt["product_qty"]
+        total = int(qty) + int(pdt_qty)
+        db.collection("tbl_product").document(cart["product_id"]).update({"product_qty":total})
+        db.collection("tbl_cart").document(id).update({"cart_status":"1"})
+        return render(request,"User/HomePage.html",{"msg":"Order Is Cancelled.."})
+    else:
+        qty = cart["cart_qty"]
+        pdt = db.collection("tbl_product").document(cart["product_id"]).get().to_dict()
+        pdt_qty = pdt["product_qty"]
+        total = int(qty) + int(pdt_qty)
+        db.collection("tbl_product").document(cart["product_id"]).update({"product_qty":total})
+        db.collection("tbl_cart").document(id).update({"cart_status":"1"})
+        db.collection("tbl_booking").document(bookid).update({"booking_status":"2"})
+        return render(request,"User/HomePage.html",{"msg":"Order Is Cancelled.."})

@@ -40,7 +40,7 @@
     }
     .cont-gap1 {
         margin-top: 10px;
-        padding-bottom: 15px;
+        padding-bottom: 10px;
     }
     .content {
         display: flex;
@@ -97,7 +97,7 @@
         background-color: red;
     }
     .text {
-        padding: 10px;
+        padding: 10px 20px;
         border: 1px black solid;
         border-radius: 10px;
     }
@@ -132,11 +132,17 @@
                             <div class="cont-gap1">Item #{{forloop.counter}}</div>
                             <div class="cont-gap1">Name :{{i.product.product_name}}</div>
                             <div class="cont-gap1">Rate : <span id="rate" class="rate">{{i.product.product_rate}}</span> </div>
+                            <div class="cont-gap1">Stock : {{i.product.product_qty}} </div>
                         </div>
                         <div>
-                            <div class="cont-gap">Quantity : <input type="number" name="txt_qty" id="txt_qty" class="text txt_qty" value="{{i.cart.cart_qty}}" min="1" alt="{{i.id}}" onchange="getCalculate()"></div>
+                            {% if i.product.product_qty == "0" %}
+                            <div class="cont-gap" style="color: red;">Out Of Delivery</div>
+                            <div class="cont-gap" style="display: flex;flex-direction: row;justify-content: flex-end;"><div style="width: fit-content;"><a href="{% url 'webuser:deletecartitem' i.id %}"><i class="fas fa-trash-alt delete"></i></a></div></div>
+                            {% else %}
+                            <div class="cont-gap">Quantity : <input type="number" name="txt_qty" id="txt_qty" class="text txt_qty" value="{{i.cart.cart_qty}}" min="1" alt="{{i.id}}" max="{{i.product.product_qty}}" onchange="getCalculate()"></div>
                             <div class="cont-gap con">Total : <span id="total" class="total">{{i.product.product_rate|mul:i.cart.cart_qty}}</span> </div>
                             <div class="cont-gap" style="display: flex;flex-direction: row;justify-content: flex-end;"><div style="width: fit-content;"><a href="{% url 'webuser:deletecartitem' i.id %}"><i class="fas fa-trash-alt delete"></i></a></div></div>
+                            {% endif %}
                         </div>
                     </div>
                     {% endfor %}
@@ -148,12 +154,15 @@
                 </div>
             </div>
         </div>
+        {% if total == 0 %}
+        {% else %}
         <div class="out">
             <form action="" method="post">
                 {% csrf_token %}
                 <input type="submit" value="Check Out" class="check-out">
             </form>
         </div>
+        {% endif %}
     {% else %}
     <h2 align="center" style="color:red">No Items <a href="{% url 'webuser:homepage' %}"><i class="fas fa-home home"></i></a></h2>
     {% endif %}

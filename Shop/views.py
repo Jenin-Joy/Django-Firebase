@@ -110,11 +110,11 @@ def viewbooking(request):
             bkid.add(ct["booking_id"])
     for bk in bkid:
         book = db.collection("tbl_booking").document(bk).get().to_dict()
-        if book["booking_status"] == "1":
+        if book["booking_status"] >= "1":
             user = db.collection("tbl_user").document(book["user_id"]).get().to_dict()
             book_data.append({"book":book,"user":user,"id":bk})
     for data in book_data:
-        cart_data  = db.collection("tbl_cart").where("booking_id", "==", data['id']).stream()
+        cart_data  = db.collection("tbl_cart").where("booking_id", "==", data['id']).where("cart_status", "==", "0").stream()
         tot = 0
         for c in cart_data:
             crt = c.to_dict()
@@ -127,10 +127,14 @@ def viewbooking(request):
     return render(request,"Shop/ViewBooking.html",{'book':final_data})
 
 def vieworderpdt(request,id):
-    cart = db.collection("tbl_cart").where("booking_id", "==", id).stream()
+    cart = db.collection("tbl_cart").where("booking_id", "==", id).where("cart_status", "==", "0").stream()
     cart_pdt = []
     for c in cart:
         ct = c.to_dict()
         pdt = db.collection("tbl_product").document(ct["product_id"]).get().to_dict()
         cart_pdt.append({"cart":ct,"id":c.id,"product":pdt})
     return render(request,"Shop/ViewOrderProduct.html",{"data":cart_pdt})
+
+def itemdelivered(request,id):
+    db.collection("tbl_booking").document(id).update({"booking_status":"3"})
+    return render(request,"Shop/ViewBooking.html",{"msg":"Item Delivered"})

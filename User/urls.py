@@ -21,4 +21,5 @@ urlpatterns = [
     path('mybooking/',views.mybooking,name="mybooking"),
     path('bookedproducts/<str:id>',views.bookedproducts,name="bookedproducts"),
     path('bills/<str:id>',views.bills,name="bills"),
+    path('ordercancel/<str:id>',views.ordercancel,name="ordercancel"),
 ]
