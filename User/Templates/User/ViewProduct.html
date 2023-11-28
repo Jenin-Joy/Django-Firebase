@@ -71,6 +71,47 @@
                         <td>Rate</td>
                         <td>{{i.pdt.product_rate}}</td>
                     </tr>
+                    <tr>
+                        <td>
+                            <div class="col-sm-4 text-center">
+                                <div class="mb-3">
+                                    {% if i.avg == 1 %}
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star star-light mr-1 main_star"></i>
+                                    <i class="fas fa-star star-light mr-1 main_star"></i>
+                                    <i class="fas fa-star star-light mr-1 main_star"></i>
+                                    <i class="fas fa-star star-light mr-1 main_star"></i>
+                                    {% elif i.avg == 2 %}
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star star-light mr-1 main_star"></i>
+                                    <i class="fas fa-star star-light mr-1 main_star"></i>
+                                    <i class="fas fa-star star-light mr-1 main_star"></i>
+        
+                                    {% elif i.avg == 3 %}
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star star-light mr-1 main_star"></i>
+                                    <i class="fas fa-star star-light mr-1 main_star"></i>
+                                    {% elif i.avg == 4 %}
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star star-light mr-1 main_star"></i>
+                                    {% elif i.avg == 5 %}
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    {% endif %}
+        
+                                </div>
+                                </div>
+                        </td>
+                    </tr>
                 </table>
             </div>
             <div>

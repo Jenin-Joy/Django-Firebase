@@ -20,7 +20,7 @@
 
 </head>
 
-<body>
+<body onload="starrating()">
 
     <div class="container">
         <h1 class="mt-5 mb-5"></h1>
@@ -49,7 +49,7 @@
                             <i class="fas fa-star star-light mr-1 main_star"></i>
                             <i class="fas fa-star star-light mr-1 main_star"></i>
                             <i class="fas fa-star star-light mr-1 main_star"></i>
-        
+
                             {% elif avg == 3 %}
                             <i class="fas fa-star text-warning"></i>
                             <i class="fas fa-star text-warning"></i>
@@ -69,7 +69,7 @@
                             <i class="fas fa-star text-warning"></i>
                             <i class="fas fa-star text-warning"></i>
                             {% endif %}
-                           
+
                         </div>
                         <h3><span id="total_review">{{count}}</span> Review</h3>
                     </div>
@@ -77,7 +77,7 @@
                         <p>
                         <div class="progress-label-left"><b>5</b> <i class="fas fa-star text-warning"></i></div>
 
-                        <div class="progress-label-right">(<span id="total_five_star_review">0</span>)</div>
+                        <div class="progress-label-right">(<span id="total_five_star_review">{{five}}</span>)</div>
                         <div class="progress">
                             <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0"
                                 aria-valuemax="100" id="five_star_progress"></div>
@@ -86,7 +86,7 @@
                         <p>
                         <div class="progress-label-left"><b>4</b> <i class="fas fa-star text-warning"></i></div>
 
-                        <div class="progress-label-right">(<span id="total_four_star_review">0</span>)</div>
+                        <div class="progress-label-right">(<span id="total_four_star_review">{{four}}</span>)</div>
                         <div class="progress">
                             <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0"
                                 aria-valuemax="100" id="four_star_progress"></div>
@@ -95,7 +95,7 @@
                         <p>
                         <div class="progress-label-left"><b>3</b> <i class="fas fa-star text-warning"></i></div>
 
-                        <div class="progress-label-right">(<span id="total_three_star_review">0</span>)</div>
+                        <div class="progress-label-right">(<span id="total_three_star_review">{{three}}</span>)</div>
                         <div class="progress">
                             <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0"
                                 aria-valuemax="100" id="three_star_progress"></div>
@@ -104,7 +104,7 @@
                         <p>
                         <div class="progress-label-left"><b>2</b> <i class="fas fa-star text-warning"></i></div>
 
-                        <div class="progress-label-right">(<span id="total_two_star_review">0</span>)</div>
+                        <div class="progress-label-right">(<span id="total_two_star_review">{{two}}</span>)</div>
                         <div class="progress">
                             <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0"
                                 aria-valuemax="100" id="two_star_progress"></div>
@@ -113,7 +113,7 @@
                         <p>
                         <div class="progress-label-left"><b>1</b> <i class="fas fa-star text-warning"></i></div>
 
-                        <div class="progress-label-right">(<span id="total_one_star_review">0</span>)</div>
+                        <div class="progress-label-right">(<span id="total_one_star_review">{{one}}</span>)</div>
                         <div class="progress">
                             <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0"
                                 aria-valuemax="100" id="one_star_progress"></div>
@@ -131,20 +131,21 @@
             {% if data %}
             {% for i in data %}
             <div class="card">
-                <div class="card-header">{{i.user_name}}</div>
+                <div class="card-header">{{i.data.user_name}}</div>
                 <div class="card-body">
                     <div class="row">
                         {% for j in ar %}
                         <col-sm-6>
-                            {% if j <= i.rating_data %} <i class="fas fa-star text-warning"></i>
+
+                            {% if j <= i.data.rating_data %} <i class="fas fa-star text-warning mr-1"></i>
                                 <!--Gold Star-->
                                 {% else %}
-                                <i class="fas fa-star star-light"></i>
+                                <i class="fas fa-star star-light mr-1"></i>
                                 {% endif %}
                                 <!--Grey Star-->
                         </col-sm-6>
                         {% endfor %}
-                        <div class="col-sm-6">{{i.user_review}}</div>
+                        <div class="col-sm-6">{{i.data.user_review}}</div>
                     </div>
                 </div>
             </div>
@@ -282,6 +283,7 @@
                     url: "{% url 'webuser:ajaxrating' %}",
                     data: { rating_data: rating_data, user_name: user_name, user_review: user_review, workid: labour_id },
                     success: function (data) {
+                        console.log(data);
                         $('#review_modal').modal('hide');
                         window.location.reload();
 
@@ -289,18 +291,40 @@
                         //alert(data);
                     }
                 })
-
-
-
-               
             }
-
         });
-
-
-
-
-
     });
+    function starrating() {
+        var pdt = document.getElementById("txt_lid").value
+        var ur = "{% url 'webuser:starrating' %}"
+        $.ajax({
+            url: ur,
+            data: { pdt: pdt, },
+            success: function (data) {
+                // $("#sel_place").html(data);
+                console.log(data);
 
+
+                $('#total_five_star_review').text(data.five);
+
+                $('#total_four_star_review').text(data.four);
+
+                $('#total_three_star_review').text(data.three);
+
+                $('#total_two_star_review').text(data.two);
+
+                $('#total_one_star_review').text(data.one);
+
+                $('#five_star_progress').css('width', (data.five / data.total_review) * 100 + '%');
+
+                $('#four_star_progress').css('width', (data.four / data.total_review) * 100 + '%');
+
+                $('#three_star_progress').css('width', (data.three / data.total_review) * 100 + '%');
+
+                $('#two_star_progress').css('width', (data.two / data.total_review) * 100 + '%');
+
+                $('#one_star_progress').css('width', (data.one / data.total_review) * 100 + '%');
+            },
+        });
+    }
 </script>

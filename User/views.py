@@ -7,6 +7,8 @@ from django.conf import settings
 from django.contrib import messages
 from datetime import date,timezone
 import random
+import json
+from django.http import JsonResponse
 # Create your views here.
 
 db = firestore.client()
@@ -269,42 +271,59 @@ def ordercancel(request,id):
         return render(request,"User/HomePage.html",{"msg":"Order Is Cancelled.."})
 
 def rating(request,cid):
-    parray=[1,2,3,4,5]
-    # mid=mid
-    # cdata=tbl_cart.objects.get(id=mid)
-    # wid=cdata.product.id
-    # wdata=tbl_product.objects.get(id=wid)
-    # counts=0
-    # counts=stardata=tbl_rating.objects.filter(product=wdata).count()
-    # if counts>0:
-    #     res=0
-    #     stardata=tbl_rating.objects.filter(product=wdata).order_by('-datetime')
-    #     for i in stardata:
-    #         res=res+i.rating_data
-    #     avg=res//counts
-    #     return render(request,"User/Rating.html",{'mid':mid,'data':stardata,'ar':parray,'avg':avg,'count':counts})
-    # else:
-    #      return render(request,"User/Rating.html",{'mid':mid})
-    
+    parray=["1","2","3","4","5"]    
     cdata = db.collection("tbl_cart").document(cid).get().to_dict()
     count = 0
+    r_len = 0
+    r_data = []
     rate = db.collection("tbl_rating").where("product_id", "==", cdata["product_id"]).stream()
     for i in rate:
         rdata = i.to_dict()
-        print(rdata)
-        # rlen = int(len(rdata)) // 5
-        # if rlen>0:
-        #     res=0    
-    return render(request,"User/Rating.html",{'cid':cid})
+        r_len = r_len + int(len(rdata))
+    rlen = r_len // 5
+    if rlen>0:
+        res=0    
+        ratedata = db.collection("tbl_rating").where("product_id", "==", cdata["product_id"]).stream()
+        for i in ratedata:
+            rated = i.to_dict()
+            r_data.append({"data":i.to_dict()})
+            res = res + int(rated["rating_data"])
+            avg = res//rlen
+        return render(request,"User/Rating.html",{"cid":cid,"data":r_data,"ar":parray,"avg":avg,"count":rlen})
+    else:
+        return render(request,"User/Rating.html",{'cid':cid})
 
 def ajaxrating(request):
     parray=[1,2,3,4,5]
     rate_data = []
     cart = db.collection("tbl_cart").document(request.GET.get('workid')).get().to_dict()
     datedata = date.today()
-    print(str(datedata))
     db.collection("tbl_rating").add({"rating_data":request.GET.get('rating_data'),"user_name":request.GET.get('user_name'),"user_review":request.GET.get('user_review'),"product_id":cart["product_id"],"date":str(datedata)})
     pdt = db.collection("tbl_rating").where("product_id", "==", cart["product_id"]).stream()
     for p in pdt:
         rate_data.append({"rate":p.to_dict(),"id":p.id})
     return render(request,"User/AjaxRating.html",{'data':rate_data,'ar':parray})
+
+def starrating(request):
+    r_len = 0
+    five = four = three = two = one = 0
+    cdata = db.collection("tbl_cart").document(request.GET.get("pdt")).get().to_dict()
+    rate = db.collection("tbl_rating").where("product_id", "==", cdata["product_id"]).stream()
+    for i in rate:
+        rated = i.to_dict()
+        if int(rated["rating_data"]) == 5:
+            five = five + 1
+        elif int(rated["rating_data"]) == 4:
+            four = four + 1
+        elif int(rated["rating_data"]) == 3:
+            three = three + 1
+        elif int(rated["rating_data"]) == 2:
+            two = two + 1
+        elif int(rated["rating_data"]) == 1:
+            one = one + 1
+        else:
+            five = four = three = two = one = 0
+        r_len = r_len + int(len(rated))
+    rlen = r_len // 5
+    result = {"five":five,"four":four,"three":three,"two":two,"one":one,"total_review":rlen}
+    return JsonResponse(result)
