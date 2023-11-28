@@ -35,7 +35,7 @@ def district(request):
     # print(district)
     if request.method == "POST":
         district = {'district_name':request.POST.get("txt_district")}
-        db.collection("tbl_district").document().set(district)
+        db.collection("tbl_district").add(district)
         return redirect("webadmin:district")
     else:
         return render(request,"Admin/District.html",{'district':district})
@@ -81,7 +81,7 @@ def place(request):
 
     if request.method == "POST":
         place_data = {'place_name':request.POST.get("txt_place"),'district_id':request.POST.get("sel_district")}
-        db.collection("tbl_place").document().set(place_data)
+        db.collection("tbl_place").add(place_data)
         return redirect("webadmin:place")
     else:
         return render(request,"Admin/Place.html",{'dis':dis_data,'pla':result})

@@ -5,7 +5,7 @@ import pyrebase
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
-from datetime import datetime,timezone
+from datetime import date,timezone
 import random
 # Create your views here.
 
@@ -267,3 +267,44 @@ def ordercancel(request,id):
         db.collection("tbl_cart").document(id).update({"cart_status":"1"})
         db.collection("tbl_booking").document(bookid).update({"booking_status":"2"})
         return render(request,"User/HomePage.html",{"msg":"Order Is Cancelled.."})
+
+def rating(request,cid):
+    parray=[1,2,3,4,5]
+    # mid=mid
+    # cdata=tbl_cart.objects.get(id=mid)
+    # wid=cdata.product.id
+    # wdata=tbl_product.objects.get(id=wid)
+    # counts=0
+    # counts=stardata=tbl_rating.objects.filter(product=wdata).count()
+    # if counts>0:
+    #     res=0
+    #     stardata=tbl_rating.objects.filter(product=wdata).order_by('-datetime')
+    #     for i in stardata:
+    #         res=res+i.rating_data
+    #     avg=res//counts
+    #     return render(request,"User/Rating.html",{'mid':mid,'data':stardata,'ar':parray,'avg':avg,'count':counts})
+    # else:
+    #      return render(request,"User/Rating.html",{'mid':mid})
+    
+    cdata = db.collection("tbl_cart").document(cid).get().to_dict()
+    count = 0
+    rate = db.collection("tbl_rating").where("product_id", "==", cdata["product_id"]).stream()
+    for i in rate:
+        rdata = i.to_dict()
+        print(rdata)
+        # rlen = int(len(rdata)) // 5
+        # if rlen>0:
+        #     res=0    
+    return render(request,"User/Rating.html",{'cid':cid})
+
+def ajaxrating(request):
+    parray=[1,2,3,4,5]
+    rate_data = []
+    cart = db.collection("tbl_cart").document(request.GET.get('workid')).get().to_dict()
+    datedata = date.today()
+    print(str(datedata))
+    db.collection("tbl_rating").add({"rating_data":request.GET.get('rating_data'),"user_name":request.GET.get('user_name'),"user_review":request.GET.get('user_review'),"product_id":cart["product_id"],"date":str(datedata)})
+    pdt = db.collection("tbl_rating").where("product_id", "==", cart["product_id"]).stream()
+    for p in pdt:
+        rate_data.append({"rate":p.to_dict(),"id":p.id})
+    return render(request,"User/AjaxRating.html",{'data':rate_data,'ar':parray})

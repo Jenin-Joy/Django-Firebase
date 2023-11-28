@@ -22,4 +22,6 @@ urlpatterns = [
     path('bookedproducts/<str:id>',views.bookedproducts,name="bookedproducts"),
     path('bills/<str:id>',views.bills,name="bills"),
     path('ordercancel/<str:id>',views.ordercancel,name="ordercancel"),
+    path('rating/<str:cid>',views.rating,name="rating"),
+    path('ajaxrating',views.ajaxrating,name="ajaxrating"),
 ]

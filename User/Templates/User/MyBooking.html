@@ -38,6 +38,8 @@
             <td>
                 {% if i.book.booking_status == "2" %}
                 <span style="color: red;">No Items</span>
+                {% elif i.book.booking_status == "3" %}
+                <a href="{% url 'webuser:bookedproducts' i.id %}">View Products</a>
                 {% else %}
                 <a href="{% url 'webuser:bookedproducts' i.id %}">View Products</a>
                 {% endif %}

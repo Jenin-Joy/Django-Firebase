@@ -66,6 +66,7 @@
                     </tr>
                     <tr>
                         {% if i.book.booking_status == "3" %}
+                        <td colspan="2" align="center"><a href="{% url 'webuser:rating' i.cid  %}">Rate Now</a></td>
                         {% else %}
                         <td colspan="2" align="center"><a href="{% url 'webuser:ordercancel' i.cid %}">Cancel Order</a></td>
                         {% endif %}
