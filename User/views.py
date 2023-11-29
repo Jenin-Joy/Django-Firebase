@@ -59,8 +59,21 @@ def searchshop(request):
 def viewproduct(request,shid):
     pdt = db.collection("tbl_product").where("shop_id", "==", shid).stream()
     pdt_data = []
+    rate_len = 0
     for i in pdt:
-        pdt_data.append({"pdt":i.to_dict(),"id":i.id})
+        rating_count = db.collection("tbl_rating").where("product_id", "==", i.id).stream()
+        for rc in rating_count:
+            rate_d = rc.to_dict()
+            rate_len = rate_len + int(len(rate_d))
+        r_len = rate_len//5
+        res = 0
+        avg = 0
+        rating = db.collection("tbl_rating").where("product_id", "==", i.id).stream()
+        for r in rating:
+            rate = r.to_dict()
+            res = res + int(rate["rating_data"])
+            avg = res//r_len 
+        pdt_data.append({"pdt":i.to_dict(),"id":i.id,"avg":avg})
     category = db.collection("tbl_category").stream()
     cat_data = []
     for c in category:
@@ -84,15 +97,41 @@ def ajaxshop(request):
 def ajaxproduct(request):
     pdt_data = []
     if request.GET.get("subcatid") != "":
+        rate_len = 0
         pdt = db.collection("tbl_product").where("subcategory_id", "==", request.GET.get("subcatid")).stream()
         for i in pdt:
-            pdt_data.append({"pdt":i.to_dict(),"id":i.id})
+            rating_count = db.collection("tbl_rating").where("product_id", "==", i.id).stream()
+            for rc in rating_count:
+                rate_d = rc.to_dict()
+                rate_len = rate_len + int(len(rate_d))
+            r_len = rate_len//5
+            res = 0
+            avg = 0
+            rating = db.collection("tbl_rating").where("product_id", "==", i.id).stream()
+            for r in rating:
+                rate = r.to_dict()
+                res = res + int(rate["rating_data"])
+                avg = res//r_len 
+            pdt_data.append({"pdt":i.to_dict(),"id":i.id,"avg":avg})
     else:
+        rate_len = 0
         subcat = db.collection("tbl_subcategory").where("category_id", "==", request.GET.get("catid")).stream()
         for s in subcat:
             pdt = db.collection("tbl_product").where("subcategory_id", "==", s.id).stream()
             for i in pdt:
-                pdt_data.append({"pdt":i.to_dict(),"id":i.id})
+                rating_count = db.collection("tbl_rating").where("product_id", "==", i.id).stream()
+                for rc in rating_count:
+                    rate_d = rc.to_dict()
+                    rate_len = rate_len + int(len(rate_d))
+                r_len = rate_len//5
+                res = 0
+                avg = 0
+                rating = db.collection("tbl_rating").where("product_id", "==", i.id).stream()
+                for r in rating:
+                    rate = r.to_dict()
+                    res = res + int(rate["rating_data"])
+                    avg = res//r_len 
+                pdt_data.append({"pdt":i.to_dict(),"id":i.id,"avg":avg})
     return render(request,"User/AjaxProduct.html",{"pdt":pdt_data})
 
 def addtocart(request,pid):
