@@ -1,3 +1,5 @@
+{% extends 'Shop/Head.html' %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,5 +21,12 @@
             </tr>
         </table>
     </form>
+    {% if msg %}
+    <script>
+        alert("{{msg}}")
+        window.location = "{% url 'webshop:home' %}"
+    </script>
+    {% endif %}
 </body>
 </html>
+{% endblock content %}

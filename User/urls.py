@@ -27,4 +27,6 @@ urlpatterns = [
     path('starrating/',views.starrating,name="starrating"),
     path('complaint/',views.complaint,name="complaint"),
     path('viewreply/',views.viewreply,name="viewreply"),
+    path('feedback/',views.feedback,name="feedback"),
+    path('logout/',views.logout,name="logout"),
 ]

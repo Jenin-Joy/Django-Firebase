@@ -1,3 +1,5 @@
+{% extends 'Admin/HomePage.html' %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +10,7 @@
 <body>
     <form action="" method="post">
         {% csrf_token %}
+        <div id="tab">
         <table>
             <tr>
                 <td>Category</td>
@@ -48,5 +51,7 @@
         </tr>
         {% endfor %}
     </table>
+</div>
 </body>
 </html>
+{% endblock content %}

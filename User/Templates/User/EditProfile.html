@@ -1,3 +1,6 @@
+{% extends 'User/Head.html' %}
+{% load static %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +9,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="" method="post" id="EditProfile" data-profile-url="{% url 'webuser:ajaxupdateemail' %}">
+    <form action="" method="post" >
         {% csrf_token %}
         <table>
             <tr>
@@ -28,3 +31,4 @@
     </form>
 </body>
 </html>
+{% endblock content %}

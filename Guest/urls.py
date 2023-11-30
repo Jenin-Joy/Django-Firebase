@@ -8,5 +8,6 @@ urlpatterns = [
     path('login/',views.login,name="login"),
     # path('example/',views.example,name="example"),
     path('shopreg/',views.shopreg,name="shopreg"),
+    path('',views.index,name="index"),
     # path('ajaxexample/',views.ajaxexample,name="ajaxexample"),
 ]

@@ -1,0 +1,35 @@
+{% extends 'Subadmin/Head.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table cellpadding="10">
+        <tr>
+            <td>#</td>
+            <td>Content</td>
+            <td>Date</td>
+            <td>Reply</td>
+        </tr>
+        {% for i in com %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.complaint.complaint_content}}</td>
+            <td>{{i.complaint.complaint_date}}</td>
+            <td>
+                {% if i.complaint.complaint_reply == "" %}
+                <span style="color: red;">Not Replyed</span>
+                {% else %}
+                {{i.complaint.complaint_reply}}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+{% endblock content %}

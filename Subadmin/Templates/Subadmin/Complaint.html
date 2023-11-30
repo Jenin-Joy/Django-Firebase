@@ -1,3 +1,5 @@
+{% extends 'Subadmin/Head.html' %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +19,17 @@
             <tr>
                 <td colspan="2" align="right"><input type="submit" value="Send"></td>
             </tr>
+            <tr>
+                <td><a href="{% url 'websubadmin:viewreply' %}">View Reply</a></td>
+            </tr>
         </table>
     </form>
+    {% if msg %}
+    <script>
+        alert("{{msg}}")
+        window.location = "{% url 'websubadmin:home' %}"
+    </script>
+    {% endif %}
 </body>
 </html>
+{% endblock content %}

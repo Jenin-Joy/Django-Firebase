@@ -23,6 +23,10 @@ auth = firebase.auth()
 sd = firebase.storage()
 
 # Create your views here.
+
+def index(request):
+    return render(request,"Guest/index.html")
+
 def userreg(request):
     district_data = []
     district_result = {}
@@ -68,42 +72,46 @@ def login(request):
     if request.method == "POST":
         email = request.POST.get("txt_email")
         password = request.POST.get("txt_password")
-        try:
-            user = auth.sign_in_with_email_and_password(email,password)
-        except: 
-            return render(request,"Guest/Login.html",{'msg':"INVALID_LOGIN_CREDENTIALS... Check Email and Password"})
-        userid = user["localId"]
-        user_data = db.collection("tbl_user").where("user_id", "==", userid).stream()
-        for i in user_data:
-            udata_id = i.id
-        subadmin_data = db.collection("tbl_subadmin").where("subadmin_id", "==", userid).stream()
-        for sa in subadmin_data:
-            subadmindata_id = sa.id
-            sub = sa.to_dict()
-            sub_dis = sub["district_id"] 
-        shop_data = db.collection("tbl_shop").where("shop_id", "==", userid).stream()
-        for shop in shop_data:
-            shopdata_id = shop.id
-            shop_data = shop.to_dict()
-            shop_status = shop_data["shop_status"]
-        if udata_id:
-            request.session["uid"] = udata_id
-            return redirect("webuser:homepage")
-        elif subadmindata_id:
-            request.session["said"] = subadmindata_id
-            request.session["subdis"] = sub_dis
-            return redirect("websubadmin:home")
-        elif shopdata_id:
-            if shop_status == "2":
-                return render(request,"Guest/Login.html",{"msg":"Your Request is Rejected"})
-            elif shop_status == "0":
-                return render(request,"Guest/Login.html",{"msg":"Your Request is Pending"})
-            else:
-                request.session["shid"] = shopdata_id
-                return redirect("webshop:home")
+        if (email == "admin@gmail.com") & (password == "itsmeadmin"):
+            request.session["aid"] = 1
+            return redirect("webadmin:home")
         else:
-            # print(udata_id)
-            return render(request,"Guest/Login.html",{"msg":"Your Request is pending or Rejected"})
+            try:
+                user = auth.sign_in_with_email_and_password(email,password)
+            except: 
+                return render(request,"Guest/Login.html",{'msg':"INVALID_LOGIN_CREDENTIALS... Check Email and Password"})
+            userid = user["localId"]
+            user_data = db.collection("tbl_user").where("user_id", "==", userid).stream()
+            for i in user_data:
+                udata_id = i.id
+            subadmin_data = db.collection("tbl_subadmin").where("subadmin_id", "==", userid).stream()
+            for sa in subadmin_data:
+                subadmindata_id = sa.id
+                sub = sa.to_dict()
+                sub_dis = sub["district_id"] 
+            shop_data = db.collection("tbl_shop").where("shop_id", "==", userid).stream()
+            for shop in shop_data:
+                shopdata_id = shop.id
+                shop_data = shop.to_dict()
+                shop_status = shop_data["shop_status"]
+            if udata_id:
+                request.session["uid"] = udata_id
+                return redirect("webuser:homepage")
+            elif subadmindata_id:
+                request.session["said"] = subadmindata_id
+                request.session["subdis"] = sub_dis
+                return redirect("websubadmin:home")
+            elif shopdata_id:
+                if shop_status == "2":
+                    return render(request,"Guest/Login.html",{"msg":"Your Request is Rejected"})
+                elif shop_status == "0":
+                    return render(request,"Guest/Login.html",{"msg":"Your Request is Pending"})
+                else:
+                    request.session["shid"] = shopdata_id
+                    return redirect("webshop:home")
+            else:
+                # print(udata_id)
+                return render(request,"Guest/Login.html",{"msg":"Your Request is pending or Rejected"})
     else:
         return render(request,"Guest/Login.html")
 

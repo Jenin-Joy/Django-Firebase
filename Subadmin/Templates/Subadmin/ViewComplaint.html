@@ -1,3 +1,5 @@
+{% extends 'Subadmin/Head.html' %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +8,8 @@
     <title>Document</title>
 </head>
 <body>
+    <a href="{% url 'websubadmin:replyedcomplaint' %}">Replyed Complaint</a>
+    <br>
     <table cellpadding="10">
         <tr>
             <th colspan="5">Complaint from User</th>
@@ -51,3 +55,4 @@
     </table>
 </body>
 </html>
+{% endblock content %}

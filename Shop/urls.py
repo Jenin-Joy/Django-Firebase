@@ -16,4 +16,6 @@ urlpatterns = [
     path('itemdelivered/<str:id>',views.itemdelivered,name="itemdelivered"),
     path('complaint/',views.complaint,name="complaint"),
     path('viewreply/',views.viewreply,name="viewreply"),
+    path('feedback/',views.feedback,name="feedback"),
+    path('logout/',views.logout,name="logout"),
 ]

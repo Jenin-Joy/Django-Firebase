@@ -1,3 +1,6 @@
+{% extends 'Guest/Head.html' %}
+{% load static %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +11,7 @@
 <body>
     <form action="" method="post">
         {% csrf_token %}
-        <table>
+        <table style="margin-top: 70px;margin-left: 42%;" cellpadding="10">
             <tr>
                 <td>Email</td>
                 <td><input type="email" name="txt_email" id=""></td>
@@ -30,3 +33,4 @@
     {% endif %}
 </body>
 </html>
+{% endblock content %}

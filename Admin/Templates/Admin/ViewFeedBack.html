@@ -1,0 +1,68 @@
+{% extends 'Admin/HomePage.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="tab">
+    <table cellpadding="10">
+        <tr>
+            <th colspan="3">FeedBack Form User</th>
+        </tr>
+        <tr>
+            <td>#</td>
+            <td>User</td>
+            <td>FeedBack</td>
+        </tr>
+        {% for u in user %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{u.user.user_name}}</td>
+            <td>{{u.feedback.feedback_content}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <table cellpadding="10">
+        <tr>
+            <th colspan="3">FeedBack Form Shop</th>
+        </tr>
+        <tr>
+            <td>#</td>
+            <td>Shop</td>
+            <td>FeedBack</td>
+        </tr>
+        {% for s in shop %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{s.shop.shop_name}}</td>
+            <td>{{s.feedback.feedback_content}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <table cellpadding="10">
+        <tr>
+            <th colspan="3">FeedBack Form Subadmin</th>
+        </tr>
+        <tr>
+            <td>#</td>
+            <td>Subadmin</td>
+            <td>FeedBack</td>
+        </tr>
+        {% for sa in subadmin %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{sa.subadmin.subadmin_name}}</td>
+            <td>{{sa.feedback.feedback_content}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+</body>
+</html>
+{% endblock content %}

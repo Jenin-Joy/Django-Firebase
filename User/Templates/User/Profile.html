@@ -1,3 +1,6 @@
+{% extends 'User/Head.html' %}
+{% load static %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,16 +31,13 @@
                 <td>{{user.user_address}}</td>
             </tr>
             <tr>
-                <td><a href="{% url 'webuser:editprofile' %}">Edit Profile</a></td>
-                <td><a href="{% url 'webuser:changepassword' %}">Change Password</a></td>
+                <td colspan="2"><a href="{% url 'webuser:editprofile' %}">Edit Profile</a></td>
+            </tr>
+            <tr>
+                <td colspan="2"><a href="{% url 'webuser:changepassword' %}">Click the link to Change Password</a></td>
             </tr>
         </table>
     </form>
-    {% if msg %}
-    <script>
-        alert("Password Reset Link is sented to the {{msg}}")
-        window.loaction = "{% url 'webuser:home' %}"
-    </script>
-    {% endif %} 
 </body>
 </html>
+{% endblock content %}

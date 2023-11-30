@@ -1,0 +1,33 @@
+{% extends 'Admin/HomePage.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="tab">
+    <table cellpadding="10">
+        <tr>
+            <td>#</td>
+            <td>Subadmin Name</td>
+            <td>Content</td>
+            <td>Date</td>
+            <td>Reply</td>
+        </tr>
+        {% for i in subadmin %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.subadmin.subadmin_name}}</td>
+            <td>{{i.complaint.complaint_content}}</td>
+            <td>{{i.complaint.complaint_date}}</td>
+            <td>{{i.complaint.complaint_reply}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+</body>
+</html>
+{% endblock content %}

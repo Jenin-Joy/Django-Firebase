@@ -16,4 +16,7 @@ urlpatterns = [
     path('reply/<str:cid>',views.reply,name="reply"),
     path('replyedcomplaint/',views.replyedcomplaint,name="replyedcomplaint"),
     path('complaint/',views.complaint,name="complaint"),
+    path('viewreply/',views.viewreply,name="viewreply"),
+    path('feedback/',views.feedback,name="feedback"),
+    path('logout/',views.logout,name="logout"),
 ]

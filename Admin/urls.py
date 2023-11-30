@@ -3,6 +3,7 @@ from Admin import views
 app_name="webadmin"
 
 urlpatterns = [
+    path('home/',views.home,name="home"),
     path('district/',views.district,name="district"),
     path('deletedistrict/<str:id>',views.deletedistrict,name="deletedistrict"),
     path('editdistrict/<str:id>',views.editdistrict,name="editdistrict"),
@@ -17,4 +18,9 @@ urlpatterns = [
     path('editsubcat/<str:id>',views.editsubcat,name="editsubcat"),
     path('addsubadmin/',views.addsubadmin,name="addsubadmin"),
     path('deletesubadmin/<str:did>',views.deletesubadmin,name="deletesubadmin"),
+    path('viewcomplaint/',views.viewcomplaint,name="viewcomplaint"),
+    path('reply/<str:cid>',views.reply,name="reply"),
+    path('replyedcomplaint/',views.replyedcomplaint,name="replyedcomplaint"),
+    path('viewfeedback/',views.viewfeedback,name="viewfeedback"),
+    path('logout/',views.logout,name="logout"),
 ]
