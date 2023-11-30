@@ -179,10 +179,10 @@ def editsubcat(request,id):
 
 def addsubadmin(request):
     dis = db.collection("tbl_district").stream()
-    district = []
+    district_data = []
     for i in dis:
         data = {"district":i.to_dict(),"id":i.id}
-        district.append(data)
+        district_data.append(data)
     subadmin = db.collection("tbl_subadmin").stream()
     suba = []
     for sa in subadmin:
@@ -204,7 +204,7 @@ def addsubadmin(request):
         db.collection("tbl_subadmin").add(data)
         return redirect("webadmin:addsubadmin")
     else:
-        return render(request,"Admin/AddSubadmin.html",{'district':district,"sub":suba})
+        return render(request,"Admin/AddSubadmin.html",{'district':district_data,"sub":suba})
 
 def deletesubadmin(request,did):
     subadmin = db.collection("tbl_subadmin").document(did)

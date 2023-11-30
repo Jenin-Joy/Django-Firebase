@@ -14,4 +14,6 @@ urlpatterns = [
     path('viewbooking/',views.viewbooking,name="viewbooking"),
     path('vieworderpdt/<str:id>',views.vieworderpdt,name="vieworderpdt"),
     path('itemdelivered/<str:id>',views.itemdelivered,name="itemdelivered"),
+    path('complaint/',views.complaint,name="complaint"),
+    path('viewreply/',views.viewreply,name="viewreply"),
 ]

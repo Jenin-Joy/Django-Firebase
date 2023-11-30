@@ -12,4 +12,8 @@ urlpatterns = [
     path('acceptedshop/',views.acceptedshop,name="acceptedshop"),
     path('rejectedshop/',views.rejectedshop,name="rejectedshop"),
     path('newuser/',views.newuser,name="newuser"),
+    path('viewcomplaint/',views.viewcomplaint,name="viewcomplaint"),
+    path('reply/<str:cid>',views.reply,name="reply"),
+    path('replyedcomplaint/',views.replyedcomplaint,name="replyedcomplaint"),
+    path('complaint/',views.complaint,name="complaint"),
 ]

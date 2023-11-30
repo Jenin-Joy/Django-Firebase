@@ -366,3 +366,18 @@ def starrating(request):
     rlen = r_len // 5
     result = {"five":five,"four":four,"three":three,"two":two,"one":one,"total_review":rlen}
     return JsonResponse(result)
+
+def complaint(request):
+    if request.method == "POST":
+        datedata = date.today()
+        db.collection("tbl_complaint").add({"complaint_content":request.POST.get("txt_complaint"),"user_id":request.session["uid"],"complaint_status":"0","complaint_date":str(datedata),"complaint_reply":""})
+        return render(request,"User/HomePage.html",{"msg":"complaint sended.."})
+    else:
+        return render(request,"User/Complaint.html")
+
+def viewreply(request):
+    com = db.collection("tbl_complaint").where("user_id", "==", request.session["uid"]).stream()
+    com_data = []
+    for c in com:
+        com_data.append({"complaint":c.to_dict(),"id":c.id})
+    return render(request,"User/ViewReply.html",{"com":com_data})

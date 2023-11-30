@@ -52,8 +52,7 @@ def userreg(request):
         return render(request,"Guest/CustomerReg.html",{"district":district_data})
 
 def ajaxplace(request):
-    district = request.GET.get("disd")
-    place = db.collection("tbl_place").where("district_id" ,"==" ,district).stream()
+    place = db.collection("tbl_place").where("district_id" ,"==" ,request.GET.get("disd")).stream()
     place_data = {}
     place_result = []
     for p in place:

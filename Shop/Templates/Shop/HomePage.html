@@ -10,5 +10,13 @@
     <br><a href="{% url 'webshop:profile' %}">Profile</a><br>
     <a href="{% url 'webshop:addproduct' %}">Add Product</a><br>
     <a href="{% url 'webshop:viewbooking' %}">View Booking</a>
+    <br><a href="{% url 'webshop:complaint' %}">Complaint</a>
+    <br><a href="{% url 'webshop:viewreply' %}">View Reply</a>
+    {% if msg %}
+    <script>
+        alert("{{msg}}")
+        window.location = "{% url 'webshop:home' %}"
+    </script>
+    {% endif %}
 </body>
 </html>

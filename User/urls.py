@@ -25,4 +25,6 @@ urlpatterns = [
     path('rating/<str:cid>',views.rating,name="rating"),
     path('ajaxrating',views.ajaxrating,name="ajaxrating"),
     path('starrating/',views.starrating,name="starrating"),
+    path('complaint/',views.complaint,name="complaint"),
+    path('viewreply/',views.viewreply,name="viewreply"),
 ]

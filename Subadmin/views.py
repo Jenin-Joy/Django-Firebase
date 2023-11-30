@@ -97,12 +97,58 @@ def rejectshop(request,rjid):
     return redirect("websubadmin:home")
 
 def newuser(request):
-    user = db.collection("tbl_user").stream()
+    placedata = db.collection("tbl_place").where("district_id", "==", request.session["subdis"]).stream()
     user_data = []
-    for i in user:
-        user = i.to_dict()
-        place = db.collection("tbl_place").document(user["place_id"]).get().to_dict()
-        district = db.collection("tbl_district").document(place["district_id"]).get().to_dict()
-        data = {"user":i.to_dict(),"id":i.id,"district":district,"place":place}
-        user_data.append(data)
+    for p in placedata:
+        user = db.collection("tbl_user").where("place_id", "==", p.id).stream()
+        for i in user:
+            user = i.to_dict()
+            place = db.collection("tbl_place").document(user["place_id"]).get().to_dict()
+            district = db.collection("tbl_district").document(place["district_id"]).get().to_dict()
+            data = {"user":i.to_dict(),"id":i.id,"district":district,"place":place}
+            user_data.append(data)
     return render(request,"Subadmin/NewUser.html",{"user":user_data})
+
+def viewcomplaint(request):
+    placedata = db.collection("tbl_place").where("district_id", "==", request.session["subdis"]).stream()
+    user_data = []
+    shop_data = []
+    for p in placedata:
+        user = db.collection("tbl_user").where("place_id", "==", p.id).stream()
+        for u in user:
+            com = db.collection("tbl_complaint").where("user_id", "==", u.id).where("complaint_status", "==", "0").stream()
+            for c in com:
+                user_data.append({"complaint":c.to_dict(),"id":c.id,"user":u.to_dict()})
+        shop = db.collection("tbl_shop").where("place_id", "==", p.id).stream()
+        for s in shop:
+            com = db.collection("tbl_complaint").where("shop_id", "==", s.id).where("complaint_status", "==", "0").stream()
+            for c in com:
+                shop_data.append({"complaint":c.to_dict(),"id":c.id,"shop":s.to_dict()})
+    return render(request,"Subadmin/ViewComplaint.html",{"user":user_data,"shop":shop_data})
+
+def reply(request,cid):
+    if request.method == "POST":
+        db.collection("tbl_complaint").document(cid).update({"complaint_reply":request.POST.get("txt_reply"),"complaint_status":"1"})
+        return render(request,"Subadmin/Reply.html",{"msg":"Reply Sended..."})
+    else:
+        return render(request,"Subadmin/Reply.html")
+
+def replyedcomplaint(request):
+    placedata = db.collection("tbl_place").where("district_id", "==", request.session["subdis"]).stream()
+    user_data = []
+    shop_data = []
+    for p in placedata:
+        user = db.collection("tbl_user").where("place_id", "==", p.id).stream()
+        for u in user:
+            com = db.collection("tbl_complaint").where("user_id", "==", u.id).where("complaint_status", "==", "1").stream()
+            for c in com:
+                user_data.append({"complaint":c.to_dict(),"id":c.id,"user":u.to_dict()})
+        shop = db.collection("tbl_shop").where("place_id", "==", p.id).stream()
+        for s in shop:
+            com = db.collection("tbl_complaint").where("shop_id", "==", s.id).where("complaint_status", "==", "1").stream()
+            for c in com:
+                shop_data.append({"complaint":c.to_dict(),"id":c.id,"shop":s.to_dict()})
+    return render(request,"Subadmin/ReplyedComplaint.html",{"user":user_data,"shop":shop_data})
+
+def complaint(request):
+    return render(request,"Subadmin/Complaint.html")

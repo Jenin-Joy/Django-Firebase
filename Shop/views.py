@@ -5,6 +5,7 @@ import pyrebase
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
+from datetime import date
 # Create your views here.
 
 db = firestore.client()
@@ -138,3 +139,18 @@ def vieworderpdt(request,id):
 def itemdelivered(request,id):
     db.collection("tbl_booking").document(id).update({"booking_status":"3"})
     return render(request,"Shop/ViewBooking.html",{"msg":"Item Delivered"})
+
+def complaint(request):
+    if request.method == "POST":
+        datedata = date.today()
+        db.collection("tbl_complaint").add({"complaint_content":request.POST.get("txt_complaint"),"shop_id":request.session["shid"],"complaint_status":"0","complaint_date":str(datedata),"complaint_reply":""})
+        return render(request,"Shop/HomePage.html",{"msg":"complaint sended.."})
+    else:
+        return render(request,"Shop/Complaint.html")
+
+def viewreply(request):
+    com = db.collection("tbl_complaint").where("shop_id", "==", request.session["shid"]).stream()
+    com_data = []
+    for c in com:
+        com_data.append({"complaint":c.to_dict(),"id":c.id})
+    return render(request,"Shop/ViewReply.html",{"com":com_data})
